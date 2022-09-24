@@ -1,3 +1,5 @@
+#gitignore was obtained here: https://gist.github.com/indyfromoz/4109296 #
+
 ###################
 # compiled source #
 ###################
@@ -73,3 +75,8 @@ _[Ss]cripts
 *.nupkg
 *.ncrunchsolution
 *.dot[Cc]over
+
+
+
+#later added files and directories:#
+.vs/
