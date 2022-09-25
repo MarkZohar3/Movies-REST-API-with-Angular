@@ -14,7 +14,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MoviesDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MoviesDbConnectionString")));
 
+builder.Services.AddCors((setup) =>
+{
+    setup.AddPolicy("default", (options) =>
+    {
+        options.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+    });
 
+});
 
 var app = builder.Build();
 
@@ -24,6 +31,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("default");
 
 app.UseHttpsRedirection();
 

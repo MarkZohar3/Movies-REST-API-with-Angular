@@ -2,14 +2,14 @@
   <h1>Angular + ASP.NET CORE CRUD</h1>
   <div class="movies-container">
     <div class="movies-form">
-      <form>
+      <form #form="ngForm" (ngSubmit)="submitMovie()">
         <div class="form-group">
           <label for="">Title</label>
-          <input type = "text" name="title">
+          <input type = "text" name="title" [(ngModel)]="movie.title">
         </div>
         <div class="form-group">
           <label for="">MinutesDuration</label>
-          <input type = "number" name="minutesDuration">
+          <input type = "string" name="minutesDuration" [(ngModel)]="movie.minutesDuration">
         </div>
         <div class="form-group">
           <button>Save</button>
@@ -19,15 +19,18 @@
 
     </div>
     <div class="movies-grid">
-      <div class="movie-row">
-        <div class="movie-row-details">
-        <span>Static value</span>
-        <span>115</span>
+
+      <div  class="movie-row" *ngFor="let movie of movies">
+        <div (click)="populateForm(movie)" class="movie-row-details">
+        <span>{{movie.title}}</span>
+        <span>{{movie.minutesDuration}}</span>
         </div>
         <div class="movie-row-action">
-          <a><i class="fa-regular fa-trash-can"></i></a>
+          <a (click)="deleteMovie(movie.id)"><i class="fa-regular fa-trash-can"></i></a>
         </div>
       </div>
+
+
   </div>
 </div>
 	

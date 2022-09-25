@@ -38,7 +38,7 @@ namespace Movies.Backend.Controllers
 
         //add Movie
         [HttpPost]
-        public async Task<IActionResult> AddCard([FromBody] Movie movie)
+        public async Task<IActionResult> AddMovie([FromBody] Movie movie)
         {
             movie.Id = Guid.NewGuid();
             await moviesDbContext.Movies.AddAsync(movie);
