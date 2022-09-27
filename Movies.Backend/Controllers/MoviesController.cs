@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Movies.Backend.Data;
 using Movies.Backend.Models;
+using Movies.Backend.Repositories;
 
 namespace Movies.Backend.Controllers
 {
@@ -9,86 +10,81 @@ namespace Movies.Backend.Controllers
     [Route("api/[controller]")]
     public class MoviesController : Controller
     {
-        private readonly MoviesDbContext moviesDbContext;
 
-        public MoviesController(MoviesDbContext moviesDbContext)
+        private readonly IMovieService _movieService;
+
+        public MoviesController(IMovieService movieService)
         {
-            this.moviesDbContext = moviesDbContext;
+            _movieService = movieService;
         }
 
-        //Get All Movies
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetAllMovies()
         {
-            var movies = await moviesDbContext.Movies.ToListAsync();
+            var movies = await _movieService.GetAllMovies();
             return Ok(movies);
         }
 
-        //get single Movie
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{id:guid}")]
         [ActionName("GetMovie")]
         public async Task<IActionResult> GetMovie([FromRoute] Guid id)
         {
-            var movie = await moviesDbContext.Movies.FirstOrDefaultAsync(x => x.Id == id);
+            var movie = await _movieService.GetMovie(id);
             if (movie != null)
                 return Ok(movie);
+
             return NotFound("Could not fetch a Movie");
         }
 
-        //add Movie
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> AddMovie([FromBody] Movie movie)
         {
-            movie.Id = Guid.NewGuid();
-            await moviesDbContext.Movies.AddAsync(movie);
-            await moviesDbContext.SaveChangesAsync();
-
-            //201 response
-            return CreatedAtAction(nameof(GetMovie), new { id = movie.Id}, movie);
+            var new_movie = await _movieService.AddMovie(movie);
+            
+            //201 response*/
+            return CreatedAtAction(nameof(GetMovie), new { id = new_movie.Id}, new_movie);
         }
 
-        //Updating a movie
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="movie"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("{id:guid}")]
         //first parameter is the object id, second are the changes
         public async Task<ActionResult> UpdateMovie([FromRoute] Guid id, [FromBody] Movie movie)
         {
-            var existingMovie = await moviesDbContext.Movies.FirstOrDefaultAsync(x => x.Id == id) ;
-
-            if(existingMovie != null)
-            {
-                existingMovie.Title = movie.Title;
-                existingMovie.MinutesDuration = movie.MinutesDuration;
-
-
-                await moviesDbContext.SaveChangesAsync();
-                return Ok(existingMovie);
-
-            }
-
-            return NotFound("Could not update the Movie");
-
+            return Ok(await _movieService.UpdateMovie(id, movie));
 
         }
 
-        //Deleting a movie
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("{id:guid}")]
-        public async Task<ActionResult> UpdateMovie([FromRoute] Guid id)
+        public async Task<ActionResult> DeleteMovie([FromRoute] Guid id)
         {
-            var existingMovie = await moviesDbContext.Movies.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (existingMovie != null)
-            {
-                moviesDbContext.Remove(existingMovie);
-                await moviesDbContext.SaveChangesAsync();  
-                return Ok(existingMovie);
-
-            }
-
-            return NotFound("Could not delete the Movie");
-
+            return Ok(await _movieService.DeleteMovie(id));
 
         }
 
