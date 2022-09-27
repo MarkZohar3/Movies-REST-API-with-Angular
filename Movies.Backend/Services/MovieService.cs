@@ -10,26 +10,35 @@ namespace Movies.Backend.Services
     {
         private readonly MoviesDbContext _moviesDbContext;
 
-
+        /// <inheritdoc />
         public MovieService(MoviesDbContext moviesDbContext)
         {
             _moviesDbContext = moviesDbContext;
         }
 
-
+        /// <inheritdoc />
         public async Task<List<Movie>> GetAllMovies()
         {
             var movies = await _moviesDbContext.Movies.ToListAsync();
             return movies;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Movie> GetMovie([FromRoute] Guid id)
         {
             var movie = await _moviesDbContext.Movies.FirstOrDefaultAsync(x => x.Id == id);
             return movie;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <returns></returns>
         public async Task<Movie> AddMovie([FromBody] Movie movie)
         {
             movie.Id = Guid.NewGuid();
@@ -48,7 +57,6 @@ namespace Movies.Backend.Services
             {
                 existingMovie.Title = movie.Title;
                 existingMovie.MinutesDuration = movie.MinutesDuration;
-
 
                 await _moviesDbContext.SaveChangesAsync();
                 return existingMovie;

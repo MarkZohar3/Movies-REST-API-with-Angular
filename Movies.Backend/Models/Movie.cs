@@ -12,8 +12,8 @@ namespace Movies.Backend.Models
 
         public int MinutesDuration { get; set; }   
 
+        public DateTime DateAdded { get; set; }
 
-
-
+        public string CountryOfOrigin { get; set; }
     }
 }
