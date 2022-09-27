@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Movies.Backend.Data;
 using Movies.Backend.Models;
 using Movies.Backend.Repositories;
+using System.Data;
 
 namespace Movies.Backend.Controllers
 {
@@ -52,11 +54,10 @@ namespace Movies.Backend.Controllers
         /// <param name="movie"></param>
         /// <returns></returns>
         [HttpPost]
+        //[Authorize(Roles = "Administrator")]
         public async Task<IActionResult> AddMovie([FromBody] Movie movie)
         {
             var new_movie = await _movieService.AddMovie(movie);
-            
-            //201 response*/
             return CreatedAtAction(nameof(GetMovie), new { id = new_movie.Id}, new_movie);
         }
 
@@ -68,7 +69,6 @@ namespace Movies.Backend.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("{id:guid}")]
-        //first parameter is the object id, second are the changes
         public async Task<ActionResult> UpdateMovie([FromRoute] Guid id, [FromBody] Movie movie)
         {
             return Ok(await _movieService.UpdateMovie(id, movie));

@@ -24,9 +24,12 @@ namespace Movies.Backend.Migrations
 
             modelBuilder.Entity("Movies.Backend.Models.Movie", b =>
                 {
-                    b.Property<Guid>("id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("MinutesDuration")
                         .HasColumnType("int");
@@ -35,7 +38,7 @@ namespace Movies.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Movies");
                 });
